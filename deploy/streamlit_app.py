@@ -41,7 +41,7 @@ if prompt := st.chat_input("Please enter your question."):
 
     with st.spinner(text="Thinking..."):
         response = client.chat.completions.create(
-            model="lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF",
+            model="AmandineFlachs/Mather-v1-gguf",
             messages=st.session_state.messages, temperature=0.7
         )
 
