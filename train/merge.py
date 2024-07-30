@@ -6,6 +6,8 @@ from peft import PeftModel
 model_name = "mistralai/Mistral-7B-Instruct-v0.3"
 
 def main():
+    """Merge our low-rank adapter (LoRA) with its base model Mistral-7B-Instruct-v0.3. The merged model will be in folder adapter/merged."""
+
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         return_dict=True,

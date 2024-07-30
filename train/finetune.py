@@ -11,13 +11,17 @@ from accelerate import PartialState
 model_name = "mistralai/Mistral-7B-Instruct-v0.3"
 
 def convert_to_conversational_format(x, input, output):
+    """Convert a pair of input/output (typically question/answer) to conversational format."""
+
     return {"messages": [{"role": "user", "content": x[input]}, {"role": "assistant", "content": x[output]}]}
 
 def create_trainer():
+    """Return a trainer configured to generate a low-rank adapter (LoRA) for Mistral-7B-Instruct-v0.3 on the MathInstruct, MetaMathQA and GSM8K datasets."""
+
     datasets = [
-        load_dataset("TIGER-Lab/MathInstruct", split="train"), # instruction, output
-        load_dataset("meta-math/MetaMathQA", split="train"), # query, response
-        load_dataset("openai/gsm8k", "main", split="train"), # question, answer
+        load_dataset("TIGER-Lab/MathInstruct", split="train"), # format: instruction, output
+        load_dataset("meta-math/MetaMathQA", split="train"), # format: query, response
+        load_dataset("openai/gsm8k", "main", split="train"), # format: question, answer
     ]
 
     offset = 0
@@ -87,10 +91,14 @@ def create_trainer():
     return trainer
 
 def save_adapter(trainer):
+    """Save adapter to adapter/adapter_config.json and adapter/adapter_model.safetensors."""
+
     model = trainer.model.module if hasattr(trainer.model, 'module') else trainer.model
     model.save_pretrained("./adapter")
 
 def main():
+    """Generate a Mistral-7B-Instruct-v0.3 fine-tune (more precisely, an adapter) and save it."""
+
     trainer = create_trainer()
 
     for name, module in trainer.model.named_modules():
